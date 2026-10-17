@@ -1,0 +1,890 @@
+/*
+Theme Name:   LAZED
+Theme URI:    https://lazed-official.com
+Description:  Custom storefront theme for LAZED. Child of Storefront. Seventies retro palette, groovy display type, wavy section dividers. Design lives here; products, prices and orders live in WooCommerce.
+Author:       LAZED
+Author URI:   https://lazed-official.com
+Template:     storefront
+Version:      0.2.0
+Requires PHP: 7.4
+License:      GNU General Public License v2 or later
+License URI:  http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain:  lazed
+Tags:         e-commerce, custom-colors, custom-logo, custom-menu
+*/
+
+/* ==========================================================================
+   LAZED design system  ·  v0.2  seventies retro
+   --------------------------------------------------------------------------
+   Change a token below and it propagates across the whole store. To restyle
+   the brand you should almost never need to edit anything outside :root.
+   ========================================================================== */
+
+:root {
+
+  /* --- Palette -----------------------------------------------------------
+     Warm seventies set. Nothing is pure black or pure white; the outline is
+     a warm near-black and the ground is a soft cream, which is what stops
+     this reading as a modern neon candy brand. */
+
+  --lzd-ink:        #2B2520;   /* outlines, body text */
+  --lzd-ink-soft:   #6B5F55;   /* secondary text */
+  --lzd-cream:      #F7F2E8;   /* page ground */
+  --lzd-cream-2:    #EFE7D8;   /* image wells, inset panels */
+  --lzd-white:      #FFFDF8;   /* warm white, cards */
+
+  --lzd-mustard:    #E5B52C;
+  --lzd-coral:      #E05A4F;
+  --lzd-blush:      #F0A0BB;
+  --lzd-sky:        #7BA5CD;
+  --lzd-avocado:    #8A9A4B;
+  --lzd-rust:       #C4582F;
+
+  /* Pastel set, used for the split banner panels and their patterns.
+     Softer and lighter than the main palette on purpose: the banner is the
+     calm, open part of the page and the saturated colours do the work
+     further down. */
+  --lzd-pastel-base:     #FDF7EA;
+  --lzd-pastel-yellow:   #F3D98A;
+  --lzd-pastel-lavender: #BCA9DD;
+  --lzd-pastel-peach:    #F7BC98;
+
+  /* --- Semantic roles --------------------------------------------------- */
+
+  --lzd-primary:    var(--lzd-coral);     /* add to cart, place order */
+  --lzd-accent:     var(--lzd-mustard);   /* secondary buttons, highlights */
+  --lzd-bg:         var(--lzd-cream);
+  --lzd-surface:    var(--lzd-white);
+  --lzd-text:       var(--lzd-ink);
+  --lzd-muted:      var(--lzd-ink-soft);
+
+  /* --- Structure ---------------------------------------------------------
+     Chunky outline plus a hard offset shadow. This is the signature that
+     ties every surface together. Keep it consistent. */
+
+  --lzd-border:     3px solid var(--lzd-ink);
+  --lzd-border-lg:  4px solid var(--lzd-ink);
+  --lzd-shadow:     0 6px 0 var(--lzd-ink);
+  --lzd-shadow-lg:  0 9px 0 var(--lzd-ink);
+
+  --lzd-radius:     20px;
+  --lzd-radius-lg:  32px;
+  --lzd-radius-pill: 999px;
+
+  /* --- Type --------------------------------------------------------------
+     Three roles on purpose:
+       groovy  big headline moments, carries the era
+       ui      buttons, product titles, labels. Retro but readable at size
+       body    long form reading. Neutral and warm. */
+
+  --lzd-font-groovy: 'Shrikhand', Georgia, serif;
+  --lzd-font-ui:     'Righteous', system-ui, sans-serif;
+  --lzd-font-body:   'Nunito', system-ui, -apple-system, sans-serif;
+
+  --lzd-gap:        1.5rem;
+  --lzd-section:    4.5rem;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+body {
+  font-family: var(--lzd-font-body);
+  background-color: var(--lzd-bg);
+  color: var(--lzd-text);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2 {
+  font-family: var(--lzd-font-groovy);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: 0;
+  color: var(--lzd-ink);
+  text-transform: none;
+}
+
+h3, h4, h5, h6 {
+  font-family: var(--lzd-font-ui);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  color: var(--lzd-ink);
+  text-transform: none;
+}
+
+h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); }
+h2 { font-size: clamp(1.7rem, 4vw, 2.5rem); }
+h3 { font-size: clamp(1.2rem, 3vw, 1.5rem); }
+
+a { color: var(--lzd-ink); text-underline-offset: 3px; }
+a:hover { color: var(--lzd-coral); }
+
+::selection { background: var(--lzd-mustard); color: var(--lzd-ink); }
+
+.lzd-kicker {
+  font-family: var(--lzd-font-ui);
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--lzd-coral);
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+/* ==========================================================================
+   Wavy dividers
+   Printed by lazed_wave() in functions.php. Purely decorative, hidden from
+   screen readers. Set the fill colour to whatever sits BELOW the wave.
+   ========================================================================== */
+
+.lzd-wave {
+  display: block;
+  width: 100%;
+  height: clamp(32px, 5vw, 64px);
+  margin-bottom: -1px; /* kills the hairline gap some browsers render */
+}
+.lzd-wave svg { display: block; width: 100%; height: 100%; }
+.lzd-wave path { stroke: var(--lzd-ink); stroke-width: 3; }
+
+/* ==========================================================================
+   Buttons
+   Storefront uses .button across cart and checkout, so restyling it here
+   means every button in the store inherits the look.
+   ========================================================================== */
+
+.button,
+button,
+input[type="submit"],
+.woocommerce #respond input#submit,
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button {
+  font-family: var(--lzd-font-ui);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  padding: 0.85rem 1.6rem;
+  border-radius: var(--lzd-radius-pill);
+  border: var(--lzd-border);
+  background: var(--lzd-mustard);
+  color: var(--lzd-ink);
+  box-shadow: 0 5px 0 var(--lzd-ink);
+  text-shadow: none;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+.woocommerce a.button:hover,
+.woocommerce button.button:hover,
+.woocommerce input.button:hover {
+  background: var(--lzd-mustard);
+  color: var(--lzd-ink);
+  transform: translateY(2px);
+  box-shadow: 0 3px 0 var(--lzd-ink);
+}
+
+.button:active,
+button:active,
+.woocommerce a.button:active,
+.woocommerce button.button:active {
+  transform: translateY(5px);
+  box-shadow: 0 0 0 var(--lzd-ink);
+}
+
+/* Primary action */
+.woocommerce button.button.alt,
+.woocommerce a.button.alt,
+.woocommerce input.button.alt,
+.woocommerce #respond input#submit.alt,
+.woocommerce .single_add_to_cart_button,
+.woocommerce #place_order,
+.button.alt {
+  background: var(--lzd-primary);
+  color: var(--lzd-white);
+}
+
+.woocommerce button.button.alt:hover,
+.woocommerce a.button.alt:hover,
+.woocommerce .single_add_to_cart_button:hover,
+.woocommerce #place_order:hover,
+.button.alt:hover {
+  background: var(--lzd-primary);
+  color: var(--lzd-white);
+}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+
+.site-header {
+  background-color: var(--lzd-cream);
+  border-bottom: var(--lzd-border);
+  padding-top: 1.2rem;
+  padding-bottom: 1.2rem;
+}
+
+.site-header .custom-logo-link img,
+.site-header .site-logo-anchor img { max-height: 58px; width: auto; }
+
+.site-branding .site-title a {
+  font-family: var(--lzd-font-groovy);
+  letter-spacing: 0.02em;
+  color: var(--lzd-ink);
+}
+
+.main-navigation ul.menu > li > a,
+.main-navigation ul.nav-menu > li > a {
+  font-family: var(--lzd-font-ui);
+  font-size: 0.95rem;
+  color: var(--lzd-ink);
+}
+.main-navigation ul.menu > li > a:hover { color: var(--lzd-coral); }
+
+.site-header-cart .cart-contents {
+  font-family: var(--lzd-font-ui);
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius-pill);
+  padding: 0.5rem 1.1rem;
+  background: var(--lzd-white);
+  box-shadow: 0 4px 0 var(--lzd-ink);
+  display: inline-block;
+}
+
+.lzd-announce {
+  background: var(--lzd-ink);
+  color: var(--lzd-mustard);
+  font-family: var(--lzd-font-ui);
+  font-size: 0.86rem;
+  letter-spacing: 0.02em;
+  text-align: center;
+  padding: 0.6rem 1rem;
+}
+
+/* ==========================================================================
+   Product cards
+   ========================================================================== */
+
+/* Grid, driven by the columns="" attribute on the [products] shortcode.
+   Storefront lays products out with floats and percentage widths, so those
+   have to be cleared or they fight the grid and the rows break. */
+.woocommerce ul.products,
+.woocommerce-page ul.products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.6rem;
+  margin: 0;
+}
+.woocommerce ul.products.columns-1 { grid-template-columns: 1fr; }
+.woocommerce ul.products.columns-2 { grid-template-columns: repeat(2, 1fr); }
+.woocommerce ul.products.columns-4 { grid-template-columns: repeat(4, 1fr); }
+.woocommerce ul.products.columns-5 { grid-template-columns: repeat(5, 1fr); }
+
+.woocommerce ul.products li.product,
+.woocommerce-page ul.products li.product {
+  width: auto !important;
+  margin: 0 !important;
+  float: none !important;
+  clear: none !important;
+  background: var(--lzd-surface);
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius-lg);
+  box-shadow: var(--lzd-shadow-lg);
+  overflow: hidden;
+  padding: 0 0 1.1rem;
+  transition: transform 0.16s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.woocommerce ul.products li.product:hover { transform: translateY(-5px); }
+
+.woocommerce ul.products li.product a img {
+  background: var(--lzd-cream-2);
+  margin: 0 0 1rem;
+  border-radius: 0;
+  box-shadow: none;
+  mix-blend-mode: multiply;
+}
+
+.woocommerce ul.products li.product .woocommerce-loop-product__title,
+.woocommerce ul.products li.product h2 {
+  font-family: var(--lzd-font-ui);
+  font-size: 1.05rem;
+  line-height: 1.25;
+  padding: 0 1.1rem;
+  margin-bottom: 0.4rem;
+}
+
+.woocommerce ul.products li.product .price {
+  font-family: var(--lzd-font-ui);
+  font-size: 1.2rem;
+  color: var(--lzd-ink);
+  padding: 0 1.1rem;
+  margin-bottom: 0.7rem;
+}
+.woocommerce ul.products li.product .price del { color: var(--lzd-muted); opacity: 0.6; font-size: 0.85em; }
+.woocommerce ul.products li.product .price ins { color: var(--lzd-coral); text-decoration: none; }
+
+.woocommerce ul.products li.product .star-rating {
+  margin: 0 1.1rem 0.5rem;
+  color: var(--lzd-rust);
+}
+
+.woocommerce ul.products li.product .button {
+  margin: auto 1.1rem 0;
+  display: inline-block;
+  font-size: 0.88rem;
+  padding: 0.6rem 1.1rem;
+}
+
+.woocommerce span.onsale {
+  background: var(--lzd-mustard);
+  color: var(--lzd-ink);
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius-pill);
+  font-family: var(--lzd-font-ui);
+  font-size: 0.72rem;
+  padding: 0.2rem 0.85rem;
+  min-height: 0;
+  min-width: 0;
+  line-height: 1.7;
+  top: 12px;
+  left: 12px;
+  right: auto;
+}
+
+/* ==========================================================================
+   Single product
+   ========================================================================== */
+
+.single-product div.product .product_title { margin-bottom: 0.5rem; }
+
+.single-product div.product .price {
+  font-family: var(--lzd-font-ui);
+  font-size: 1.8rem;
+  color: var(--lzd-ink);
+}
+
+.single-product div.product .woocommerce-product-gallery {
+  background: var(--lzd-cream-2);
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius-lg);
+  overflow: hidden;
+}
+
+.single-product div.product .summary .star-rating { color: var(--lzd-rust); }
+
+.single-product .woocommerce-tabs ul.tabs li {
+  background: var(--lzd-cream-2);
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius-pill);
+  font-family: var(--lzd-font-ui);
+}
+.single-product .woocommerce-tabs ul.tabs li.active { background: var(--lzd-mustard); }
+
+.woocommerce div.product form.cart .variations select {
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius-pill);
+  padding: 0.6rem 1rem;
+  font-family: var(--lzd-font-body);
+  font-weight: 700;
+  background-color: var(--lzd-white);
+}
+.woocommerce div.product form.cart .variations label { font-family: var(--lzd-font-ui); }
+
+.woocommerce .quantity .qty {
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius-pill);
+  padding: 0.55rem 0.5rem;
+  font-weight: 800;
+  background: var(--lzd-white);
+}
+
+/* ==========================================================================
+   Cart and checkout
+   Light touch on purpose. These templates carry the Bankful gateway and
+   WooCommerce validation. Surfaces and colour only, never structure.
+   ========================================================================== */
+
+.woocommerce table.shop_table {
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius);
+  border-collapse: separate;
+  overflow: hidden;
+  background: var(--lzd-surface);
+}
+.woocommerce table.shop_table th { font-family: var(--lzd-font-ui); background: var(--lzd-cream-2); }
+
+.woocommerce-checkout #payment,
+.woocommerce .cart-collaterals .cart_totals > div,
+.woocommerce-checkout .woocommerce-checkout-review-order {
+  background: var(--lzd-surface);
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius);
+}
+
+.woocommerce-checkout #payment ul.payment_methods { border-bottom: 2px dashed var(--lzd-cream-2); }
+
+.woocommerce form .form-row input.input-text,
+.woocommerce form .form-row textarea,
+.woocommerce form .form-row select {
+  border: 2px solid var(--lzd-ink);
+  border-radius: 14px;
+  padding: 0.7rem 0.9rem;
+  font-family: var(--lzd-font-body);
+  background: var(--lzd-white);
+}
+.woocommerce form .form-row input.input-text:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(224, 90, 79, 0.3);
+}
+
+.woocommerce-message,
+.woocommerce-info,
+.woocommerce-error {
+  border-top: none;
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius);
+  background: var(--lzd-white);
+  font-weight: 700;
+}
+.woocommerce-message::before { color: var(--lzd-avocado); }
+.woocommerce-info::before    { color: var(--lzd-sky); }
+.woocommerce-error::before   { color: var(--lzd-coral); }
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.site-footer {
+  background-color: var(--lzd-ink);
+  color: var(--lzd-cream);
+  border-top: var(--lzd-border-lg);
+}
+.site-footer a { color: var(--lzd-cream); }
+.site-footer a:hover { color: var(--lzd-mustard); }
+
+.site-footer h1, .site-footer h2, .site-footer h3,
+.site-footer .widget-title {
+  color: var(--lzd-mustard);
+  font-family: var(--lzd-font-ui);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lzd-compliance {
+  border-top: 1px solid rgba(247, 242, 232, 0.2);
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  font-size: 0.76rem;
+  line-height: 1.65;
+  opacity: 0.72;
+  max-width: 78ch;
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+
+.lzd-card {
+  background: var(--lzd-surface);
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius);
+  box-shadow: var(--lzd-shadow);
+  padding: 1.5rem;
+}
+
+.lzd-pill {
+  display: inline-block;
+  font-family: var(--lzd-font-ui);
+  font-size: 0.72rem;
+  background: var(--lzd-cream-2);
+  border: 2px solid var(--lzd-ink);
+  border-radius: var(--lzd-radius-pill);
+  padding: 0.15rem 0.7rem;
+}
+
+/* Row of buttons. Shared by the split panels and the samples band. */
+#lzd-home .lzd-hero-cta { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+
+/* ==========================================================================
+   HOMEPAGE
+   Markup in front-page.php. Editable text lives in the $lzd array there.
+   ========================================================================== */
+
+#lzd-home .lzd-section { padding: var(--lzd-section) 0; }
+
+#lzd-home .lzd-section-head {
+  max-width: 660px;
+  margin: 0 auto 2.6rem;
+  text-align: center;
+}
+#lzd-home .lzd-section-head h2 { margin-bottom: 0.8rem; }
+#lzd-home .lzd-section-head p { color: var(--lzd-muted); font-size: 1.05rem; }
+
+/* --- Split hero: THC | Mushrooms ----------------------------------------
+   Two full-bleed panels, each jumping to its own lineup section further
+   down the page. Text is ink rather than white on both panels: cream on
+   the sky blue fails contrast, and mixing white on one side with dark on
+   the other looks accidental.
+   ---------------------------------------------------------------------- */
+
+#lzd-home .lzd-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: var(--lzd-border-lg);
+}
+
+#lzd-home .lzd-split-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 3.2rem 2.8rem 0;
+  min-height: 540px;
+  overflow: hidden;
+}
+
+/* Both panels share the pastel base. The patterns behind them are what
+   tell THC and Mushrooms apart: daisies on one, liquid swirls on the other. */
+#lzd-home .lzd-split-thc  { background: var(--lzd-pastel-base); }
+#lzd-home .lzd-split-mush { background: var(--lzd-pastel-base); border-left: var(--lzd-border-lg); }
+
+/* Mustard would disappear against the pale panels, so panel buttons take
+   the coral primary instead. */
+#lzd-home .lzd-split-panel .button {
+  background: var(--lzd-coral);
+  color: var(--lzd-white);
+}
+#lzd-home .lzd-split-panel .button:hover { color: var(--lzd-white); }
+
+#lzd-home .lzd-split-panel > * { position: relative; z-index: 1; }
+
+/* Background artwork. The file comes from assets/images/ and the url is set
+   inline per panel in front-page.php. 'has-art' is only added when the file
+   actually exists, so a missing file leaves a clean pastel panel. */
+#lzd-home .lzd-split-panel.has-art {
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* A soft scrim over the artwork. Decorative backgrounds have unpredictable
+   contrast, and the headline has to stay readable wherever the pattern
+   happens to be busy. Raise the alpha if a future image is darker. */
+#lzd-home .lzd-split-panel.has-art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(105deg, rgba(253, 247, 234, 0.82) 0%, rgba(253, 247, 234, 0.55) 45%, rgba(253, 247, 234, 0.2) 100%);
+  pointer-events: none;
+}
+
+#lzd-home .lzd-split-badge {
+  display: inline-block;
+  align-self: flex-start;
+  background: var(--lzd-mustard);
+  color: var(--lzd-ink);
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius-pill);
+  font-family: var(--lzd-font-ui);
+  font-size: 0.82rem;
+  padding: 0.3rem 1rem;
+  box-shadow: 0 4px 0 var(--lzd-ink);
+  transform: rotate(-2deg);
+  margin-bottom: 1rem;
+}
+
+#lzd-home .lzd-split-kicker {
+  display: block;
+  font-family: var(--lzd-font-ui);
+  font-size: 0.82rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+  opacity: 0.85;
+}
+
+#lzd-home .lzd-split-panel h2 {
+  font-size: clamp(2rem, 4.2vw, 3.2rem);
+  line-height: 1.05;
+  margin-bottom: 0.9rem;
+}
+
+#lzd-home .lzd-split-panel p {
+  font-weight: 600;
+  max-width: 32ch;
+  margin-bottom: 1.5rem;
+}
+
+#lzd-home .lzd-split-panel .button { align-self: flex-start; }
+
+#lzd-home .lzd-split-art {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  min-height: 170px;
+  display: grid;
+  place-items: end center;
+}
+#lzd-home .lzd-split-art img {
+  max-height: 290px;
+  width: auto;
+  transform: rotate(-3deg);
+  filter: drop-shadow(0 10px 14px rgba(43, 37, 32, 0.28));
+}
+
+/* --- Trust strip --------------------------------------------------------- */
+
+#lzd-home .lzd-trust {
+  background: var(--lzd-cream);
+  border-bottom: var(--lzd-border);
+  padding: 1.6rem 0;
+}
+#lzd-home .lzd-trust-inner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  text-align: center;
+}
+#lzd-home .lzd-trust-item b {
+  display: block;
+  font-family: var(--lzd-font-ui);
+  font-weight: 400;
+  font-size: 1.5rem;
+  color: var(--lzd-rust);
+  line-height: 1.1;
+}
+#lzd-home .lzd-trust-item span { font-size: 0.9rem; font-weight: 700; }
+
+/* --- Lineup sections ------------------------------------------------------
+   One per family (THC, Mushrooms). Each holds several product groups.
+   ------------------------------------------------------------------------ */
+
+#lzd-home .lzd-family { padding: var(--lzd-section) 0; scroll-margin-top: 2rem; }
+
+#lzd-home .lzd-family-head {
+  text-align: center;
+  max-width: 660px;
+  margin: 0 auto 3rem;
+}
+#lzd-home .lzd-family-head h2 { margin-bottom: 0.8rem; }
+#lzd-home .lzd-family-head p { color: var(--lzd-muted); font-size: 1.05rem; }
+
+#lzd-home .lzd-group { margin-bottom: 3.2rem; }
+#lzd-home .lzd-group:last-child { margin-bottom: 0; }
+
+#lzd-home .lzd-group-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+}
+#lzd-home .lzd-group-title h3 {
+  font-family: var(--lzd-font-ui);
+  font-size: 1.25rem;
+  white-space: nowrap;
+}
+/* Dashed rule that fills whatever space is left beside the label. */
+#lzd-home .lzd-group-title::after {
+  content: "";
+  flex: 1;
+  height: 0;
+  border-top: 3px dashed var(--lzd-ink);
+  opacity: 0.3;
+}
+
+#lzd-home .lzd-family-mush { background: var(--lzd-cream-2); }
+
+/* A group with only two or three products looks stranded in a wide grid.
+   'narrow' caps the row and centres it so it reads as a deliberate feature
+   rather than a half empty shelf. */
+#lzd-home .lzd-group-narrow ul.products {
+  max-width: 740px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* --- Product lineup scroller -------------------------------------------- */
+
+#lzd-home .lzd-lineup {
+  background: var(--lzd-blush);
+  border-top: var(--lzd-border);
+  border-bottom: var(--lzd-border);
+  padding: var(--lzd-section) 0;
+  overflow: hidden;
+}
+
+#lzd-home .lzd-lineup .lzd-section-head h2 { color: var(--lzd-ink); }
+#lzd-home .lzd-lineup .lzd-section-head p { color: var(--lzd-ink); opacity: 0.75; }
+#lzd-home .lzd-lineup .lzd-kicker { color: var(--lzd-ink); }
+
+#lzd-home .lzd-rail {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+#lzd-home .lzd-rail::-webkit-scrollbar { display: none; }
+
+#lzd-home .lzd-rail-track {
+  display: flex;
+  gap: 1.2rem;
+  width: max-content;
+  animation: lzd-rail 46s linear infinite;
+}
+/* Pause so people can actually read and click a card. */
+#lzd-home .lzd-rail:hover .lzd-rail-track,
+#lzd-home .lzd-rail:focus-within .lzd-rail-track { animation-play-state: paused; }
+
+@keyframes lzd-rail {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+#lzd-home .lzd-rail-item {
+  flex: 0 0 auto;
+  width: 220px;
+  background: var(--lzd-surface);
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius);
+  box-shadow: var(--lzd-shadow);
+  overflow: hidden;
+  text-align: center;
+  padding-bottom: 1rem;
+}
+#lzd-home .lzd-rail-item:hover { transform: translateY(-4px); transition: transform 0.16s; }
+
+#lzd-home .lzd-rail-media {
+  background: var(--lzd-cream-2);
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  padding: 0.9rem;
+  margin-bottom: 0.8rem;
+  overflow: hidden;
+}
+#lzd-home .lzd-rail-media img {
+  max-height: 100%;
+  width: auto;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+#lzd-home .lzd-rail-fallback { font-size: 2.6rem; line-height: 1; }
+
+#lzd-home .lzd-rail-item h4 {
+  font-family: var(--lzd-font-ui);
+  font-size: 0.95rem;
+  padding: 0 0.8rem;
+  margin-bottom: 0.25rem;
+}
+#lzd-home .lzd-rail-item .lzd-rail-price {
+  font-family: var(--lzd-font-ui);
+  font-size: 1.05rem;
+  color: var(--lzd-rust);
+}
+
+/* --- Flavour marquee ---------------------------------------------------- */
+
+#lzd-home .lzd-marq {
+  background: var(--lzd-coral);
+  color: var(--lzd-white);
+  border-top: var(--lzd-border);
+  border-bottom: var(--lzd-border);
+  font-family: var(--lzd-font-ui);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  padding: 0.7rem 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#lzd-home .lzd-marq-track { display: inline-block; animation: lzd-slide 30s linear infinite; }
+#lzd-home .lzd-marq-track span { padding: 0 1.5rem; }
+
+@keyframes lzd-slide {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* --- Promises ----------------------------------------------------------- */
+
+#lzd-home .lzd-promises { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.1rem; }
+#lzd-home .lzd-promise { text-align: center; }
+#lzd-home .lzd-promise-icon { font-size: 1.8rem; display: block; margin-bottom: 0.4rem; }
+#lzd-home .lzd-promise h3 { font-size: 1rem; margin-bottom: 0.3rem; }
+#lzd-home .lzd-promise p { font-size: 0.84rem; color: var(--lzd-muted); margin: 0; }
+
+/* --- Samples band ------------------------------------------------------- */
+
+#lzd-home .lzd-samples {
+  background: var(--lzd-mustard);
+  border-top: var(--lzd-border-lg);
+  border-bottom: var(--lzd-border-lg);
+  padding: var(--lzd-section) 0;
+  text-align: center;
+}
+#lzd-home .lzd-samples h2 { margin-bottom: 0.6rem; }
+#lzd-home .lzd-samples p {
+  color: var(--lzd-ink);
+  opacity: 0.78;
+  max-width: 46ch;
+  margin: 0 auto 1.5rem;
+}
+#lzd-home .lzd-samples .lzd-hero-cta { justify-content: center; }
+
+/* ==========================================================================
+   Motion and responsive
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  #lzd-home .lzd-rail-track,
+  #lzd-home .lzd-marq-track { animation: none; }
+}
+
+@media (max-width: 1020px) {
+  /* Split hero stacks. The second panel keeps a top border instead of the
+     left one so the divider still reads correctly when stacked. */
+  #lzd-home .lzd-split { grid-template-columns: 1fr; }
+  #lzd-home .lzd-split-panel { min-height: 0; padding: 2.5rem 2rem 0; }
+  #lzd-home .lzd-split-mush { border-left: 0; border-top: var(--lzd-border-lg); }
+  #lzd-home .lzd-split-art img { max-height: 230px; }
+  #lzd-home .lzd-promises { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 1200px) {
+  /* Five across is too tight below desktop width. */
+  .woocommerce ul.products.columns-5 { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .woocommerce ul.products,
+  .woocommerce ul.products.columns-4,
+  .woocommerce ul.products.columns-5 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  :root { --lzd-section: 3rem; }
+  .woocommerce ul.products li.product { border-radius: var(--lzd-radius); }
+}
+
+@media (max-width: 640px) {
+  #lzd-home .lzd-split-panel { padding: 2rem 1.4rem 0; }
+  #lzd-home .lzd-split-art img { max-height: 190px; }
+  #lzd-home .lzd-trust-inner { grid-template-columns: 1fr; gap: 1rem; }
+  #lzd-home .lzd-promises { grid-template-columns: 1fr; }
+  #lzd-home .lzd-hero-cta .button { width: 100%; }
+  #lzd-home .lzd-rail-item { width: 170px; }
+  #lzd-home .lzd-group-title h3 { white-space: normal; }
+}
