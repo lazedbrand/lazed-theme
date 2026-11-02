@@ -19,14 +19,15 @@
  * wp-admin and it appears here on its own, already styled.
  *
  * PAGE ORDER
- *   1. Split banner      THC | Mushrooms, each jumps to its lineup below
+ *   1. Deal banner       set in Appearance > Customize > Homepage deal banner
+ *                        (falls back to the THC | Mushrooms split banner)
  *   2. Trust strip       reviews, shipping, lab testing
  *   3. Flavour marquee
  *   4. THC lineup        gummies, vapes, flower
  *   5. Mushroom lineup   gummies, trippy sippy
  *   6. The whole team    scrolling rail of everything
  *   7. Promises
- *   8. Free samples
+ *   8. Free samples      sits under the mushroom lineup (see 'sample_after')
  * =============================================================================
  *
  * @package lazed
@@ -112,26 +113,47 @@ $lzd = array(
 		array(
 			'id'     => 'thc',
 			'class'  => '',
-			'kicker' => 'THC',
-			'title'  => 'The THC lineup',
-			'intro'  => 'Start wherever you are comfortable. If you are new, half a gummy and a full hour is the honest answer.',
+			'kicker' => '',
+			'title'  => 'THC Gummies',
+			'intro'  => 'Four strengths. Pick your dose, from easy-going to Xtra Bold.',
 			'groups' => array(
-				array( 'title' => 'Gummies', 'category' => 'gummies', 'limit' => 4, 'columns' => 4 ),
-				// Comma separated slugs pull several categories into one row.
-				array( 'title' => 'Vapes &amp; Flower', 'category' => 'vapes,flower', 'limit' => 5, 'columns' => 5 ),
+				// Leave 'title' empty when the section heading already says it all.
+				array( 'title' => '', 'category' => 'gummies', 'limit' => 4, 'columns' => 4 ),
 			),
 		),
 
 		array(
 			'id'     => 'mushrooms',
 			'class'  => 'lzd-family-mush',
-			'kicker' => 'Magic Mushrooms',
-			'title'  => 'The mushroom lineup',
+			'kicker' => 'Magic',
+			'title'  => 'Gummies &amp; Sips',
 			'intro'  => 'Our nootropic blend, in whichever format suits the moment. Chew it or sip it.',
 			'groups' => array(
 				// Gummies and sips together on one row. 'narrow' centres it,
 				// since two products in a full width grid look stranded.
-				array( 'title' => 'Gummies &amp; Sips', 'category' => 'mushrooom-gummies,sips', 'limit' => 4, 'columns' => 2, 'narrow' => true ),
+				array( 'title' => '', 'category' => 'mushrooom-gummies,sips', 'limit' => 4, 'columns' => 2, 'narrow' => true ),
+			),
+		),
+
+		array(
+			'id'     => 'vapes',
+			'class'  => '',
+			'kicker' => '',
+			'title'  => 'Vapes',
+			'intro'  => '',
+			'groups' => array(
+				array( 'title' => '', 'category' => 'vapes', 'limit' => 2, 'columns' => 2, 'narrow' => true ),
+			),
+		),
+
+		array(
+			'id'     => 'flower',
+			'class'  => 'lzd-family-alt',
+			'kicker' => '',
+			'title'  => 'Flower',
+			'intro'  => '',
+			'groups' => array(
+				array( 'title' => '', 'category' => 'flower', 'limit' => 3, 'columns' => 3 ),
 			),
 		),
 	),
@@ -161,8 +183,10 @@ $lzd = array(
 	 * 8. FREE SAMPLES
 	 * ------------------------------------------------------------------ */
 
+	// Which lineup the free sample band sits under (a family 'id' above).
+	'sample_after' => 'mushrooms',
 	'sample_title' => 'Still not sure? Try a free sample',
-	'sample_text'  => 'One sample equals one gummy, on us. See how a dose actually feels before you commit to a full bag.',
+	'sample_text'  => 'One sample equals two gummies, on us. See how a dose actually feels before you commit to a full bag.',
 	'sample_ctas'  => array(
 		array( 'label' => 'Free THC sample 🥦',      'url' => '/product/sample-gummy-gummies-thc-og-600mg/' ),
 		array( 'label' => 'Free mushroom sample 🍄', 'url' => '/product/sample-gummies-mushrooms-magic-nootropic-4g/' ),
@@ -179,7 +203,13 @@ get_header();
 
 <div id="lzd-home">
 
-	<!-- ===================== 1. SPLIT BANNER ===================== -->
+	<!-- ===================== 1. DEAL BANNER (or split banner) ===================== -->
+	<?php
+	// The monthly deal banner is set in Appearance > Customize > Homepage deal banner.
+	// If none is set, the THC | Mushrooms split banner shows instead.
+	$lzd_has_deal = function_exists( 'lazed_deal_banner' ) && lazed_deal_banner();
+	if ( ! $lzd_has_deal ) :
+	?>
 	<section class="lzd-split">
 		<?php
 		foreach ( $lzd['split'] as $panel ) :
@@ -230,6 +260,7 @@ get_header();
 			</div>
 		<?php endforeach; ?>
 	</section>
+	<?php endif; ?>
 
 	<!-- ===================== 2. TRUST STRIP ===================== -->
 	<?php if ( ! empty( $lzd['trust'] ) ) : ?>
@@ -265,14 +296,32 @@ get_header();
 			<div class="col-full">
 
 				<header class="lzd-family-head">
-					<span class="lzd-kicker"><?php echo wp_kses_post( $family['kicker'] ); ?></span>
-					<h2><?php echo esc_html( $family['title'] ); ?></h2>
-					<p><?php echo esc_html( $family['intro'] ); ?></p>
+					<?php if ( ! empty( $family['kicker'] ) ) : ?>
+						<span class="lzd-kicker"><?php echo wp_kses_post( $family['kicker'] ); ?></span>
+					<?php endif; ?>
+					<h2><?php echo wp_kses_post( $family['title'] ); ?></h2>
+					<?php if ( ! empty( $family['intro'] ) ) : ?>
+						<p><?php echo esc_html( $family['intro'] ); ?></p>
+					<?php endif; ?>
+					<?php if ( ! empty( $family['doses'] ) ) : ?>
+						<ul class="lzd-doses" aria-label="Strengths">
+							<?php foreach ( $family['doses'] as $dose ) : ?>
+								<li><b><?php echo esc_html( $dose['mg'] ); ?></b> <?php echo wp_kses_post( $dose['name'] ); ?></li>
+							<?php endforeach; ?>
+						</ul>
+						<?php if ( ! empty( $family['doses_note'] ) ) : ?>
+							<p class="lzd-doses-note"><?php echo esc_html( $family['doses_note'] ); ?></p>
+						<?php endif; ?>
+					<?php endif; ?>
 				</header>
 
 				<?php foreach ( $family['groups'] as $group ) : ?>
 					<div class="lzd-group<?php echo ! empty( $group['narrow'] ) ? ' lzd-group-narrow' : ''; ?>">
-						<div class="lzd-group-title"><h3><?php echo wp_kses_post( $group['title'] ); ?></h3></div>
+						<?php if ( ! empty( $group['title'] ) ) : ?>
+							<div class="lzd-group-title"><h3><?php echo wp_kses_post( $group['title'] ); ?></h3></div>
+						<?php else : ?>
+							<div class="lzd-group-rule" aria-hidden="true"></div>
+						<?php endif; ?>
 						<?php
 						// Live from WooCommerce. Nothing about products is stored here.
 						echo do_shortcode( sprintf(
@@ -287,6 +336,21 @@ get_header();
 
 			</div>
 		</section>
+
+		<?php if ( $family['id'] === $lzd['sample_after'] ) : ?>
+		<!-- ===================== FREE SAMPLES, right after the lineup named in 'sample_after' ===================== -->
+		<section class="lzd-samples">
+			<div class="col-full">
+				<h2><?php echo esc_html( $lzd['sample_title'] ); ?></h2>
+				<p><?php echo esc_html( $lzd['sample_text'] ); ?></p>
+				<div class="lzd-hero-cta">
+					<?php foreach ( $lzd['sample_ctas'] as $i => $cta ) : ?>
+						<a class="button<?php echo 0 === $i ? ' alt' : ''; ?>" href="<?php echo esc_url( $cta['url'] ); ?>"><?php echo esc_html( $cta['label'] ); ?></a>
+					<?php endforeach; ?>
+				</div>
+			</div>
+		</section>
+		<?php endif; ?>
 
 	<?php endforeach; ?>
 
@@ -346,19 +410,6 @@ get_header();
 						<h3><?php echo wp_kses_post( $p['name'] ); ?></h3>
 						<p><?php echo wp_kses_post( $p['text'] ); ?></p>
 					</div>
-				<?php endforeach; ?>
-			</div>
-		</div>
-	</section>
-
-	<!-- ===================== 8. FREE SAMPLES ===================== -->
-	<section class="lzd-samples">
-		<div class="col-full">
-			<h2><?php echo esc_html( $lzd['sample_title'] ); ?></h2>
-			<p><?php echo esc_html( $lzd['sample_text'] ); ?></p>
-			<div class="lzd-hero-cta">
-				<?php foreach ( $lzd['sample_ctas'] as $i => $cta ) : ?>
-					<a class="button<?php echo 0 === $i ? ' alt' : ''; ?>" href="<?php echo esc_url( $cta['url'] ); ?>"><?php echo esc_html( $cta['label'] ); ?></a>
 				<?php endforeach; ?>
 			</div>
 		</div>

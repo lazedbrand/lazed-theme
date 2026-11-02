@@ -5,7 +5,7 @@ Description:  Custom storefront theme for LAZED. Child of Storefront. Seventies 
 Author:       LAZED
 Author URI:   https://lazed-official.com
 Template:     storefront
-Version:      0.2.0
+Version:      0.6.2
 Requires PHP: 7.4
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
@@ -258,6 +258,49 @@ button:active,
   display: inline-block;
 }
 
+/* Account button, styled to match the cart. Laptop only: phones get
+   My account in Storefront's bottom bar. */
+.lzd-account {
+  display: none;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--lzd-font-ui);
+  font-size: 0.95rem;
+  color: var(--lzd-ink);
+  text-decoration: none;
+  white-space: nowrap;
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius-pill);
+  padding: 0.5rem 1.1rem;
+  background: var(--lzd-white);
+  box-shadow: 0 4px 0 var(--lzd-ink);
+}
+.lzd-account:hover { color: var(--lzd-ink); background: var(--lzd-mustard); }
+
+@media (min-width: 768px) {
+  /* Menu on the left, then Account, then the cart, all on one line. */
+  .storefront-primary-navigation .col-full {
+    display: flex;
+    align-items: center;
+  }
+  .storefront-primary-navigation .col-full::before,
+  .storefront-primary-navigation .col-full::after { display: none; }
+  .storefront-primary-navigation .main-navigation {
+    flex: 1 1 auto;
+    width: auto;
+    float: none;
+    margin-right: 1rem;
+  }
+  .storefront-primary-navigation .lzd-account { display: inline-flex; margin-right: 1rem; }
+  .storefront-primary-navigation .site-header-cart {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 200px;
+    float: none;
+    margin-right: 0;
+  }
+}
+
 .lzd-announce {
   background: var(--lzd-ink);
   color: var(--lzd-mustard);
@@ -282,6 +325,14 @@ button:active,
   gap: 1.6rem;
   margin: 0;
 }
+/* WooCommerce and Storefront add invisible clearfix pieces before and
+   after the product list. In a grid they take the first cell and push the
+   first product onto its own row, so switch them off. */
+.woocommerce ul.products::before,
+.woocommerce ul.products::after,
+.woocommerce-page ul.products::before,
+.woocommerce-page ul.products::after { content: none !important; display: none !important; }
+
 .woocommerce ul.products.columns-1 { grid-template-columns: 1fr; }
 .woocommerce ul.products.columns-2 { grid-template-columns: repeat(2, 1fr); }
 .woocommerce ul.products.columns-4 { grid-template-columns: repeat(4, 1fr); }
@@ -456,6 +507,16 @@ button:active,
   background: var(--lzd-white);
   font-weight: 700;
 }
+/* Storefront's Customizer prints white text for these (made for its green
+   box). On our light box that text vanished, so set it explicitly. */
+body .woocommerce-message,
+body .woocommerce-info,
+body .woocommerce-error,
+body .woocommerce-message a,
+body .woocommerce-info a,
+body .woocommerce-error a { color: var(--lzd-ink); }
+body .woocommerce-message a.button,
+body .woocommerce-info a.button { color: var(--lzd-ink); }
 .woocommerce-message::before { color: var(--lzd-avocado); }
 .woocommerce-info::before    { color: var(--lzd-sky); }
 .woocommerce-error::before   { color: var(--lzd-coral); }
@@ -481,14 +542,79 @@ button:active,
   text-transform: uppercase;
 }
 
+/* Wordmark: the groovy display face, one candy colour per letter. */
+.lzd-wordmark {
+  font-family: var(--lzd-font-groovy);
+  font-size: clamp(3rem, 7vw, 4.6rem);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  display: inline-block;
+}
+.site-footer a.lzd-wordmark:hover { color: inherit; }
+.lzd-wordmark span:nth-child(1) { color: var(--lzd-mustard); }
+.lzd-wordmark span:nth-child(2) { color: var(--lzd-coral); }
+.lzd-wordmark span:nth-child(3) { color: var(--lzd-blush); }
+.lzd-wordmark span:nth-child(4) { color: var(--lzd-sky); }
+.lzd-wordmark span:nth-child(5) { color: var(--lzd-avocado); }
+
+.lzd-foot-main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2.5rem 4rem;
+  padding-top: 1rem;
+}
+.lzd-foot-tagline {
+  margin: 0.6rem 0 0;
+  font-size: 1.15rem;
+  color: var(--lzd-cream);
+  opacity: 0.72;
+}
+.lzd-foot-cols { display: flex; gap: 2.5rem 5rem; flex-wrap: wrap; }
+.site-footer .lzd-foot-title {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  color: var(--lzd-cream);
+  opacity: 0.6;
+  margin: 0 0 1rem;
+}
+.lzd-foot-links { list-style: none; margin: 0; padding: 0; }
+.lzd-foot-links li { margin: 0 0 0.7rem; }
+.lzd-foot-links a { text-decoration: none; font-size: 1.05rem; }
+/* Storefront's Customizer prints its own footer link colour with a stronger
+   selector, which made these links dark on dark. Win it back. */
+.site-footer .lzd-foot-links a:not(.button),
+.site-footer .lzd-foot-bottom a:not(.button) { color: var(--lzd-cream); }
+.site-footer .lzd-foot-links a:not(.button):hover,
+.site-footer .lzd-foot-bottom a:not(.button):hover { color: var(--lzd-mustard); }
+
 .lzd-compliance {
   border-top: 1px solid rgba(247, 242, 232, 0.2);
-  margin-top: 2rem;
+  margin-top: 2.5rem;
   padding-top: 1.5rem;
   font-size: 0.76rem;
   line-height: 1.65;
   opacity: 0.72;
   max-width: 78ch;
+}
+
+.lzd-foot-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  margin-top: 1.2rem;
+  font-size: 0.9rem;
+  color: var(--lzd-cream);
+}
+.lzd-foot-bottom p { margin: 0; opacity: 0.72; }
+.lzd-foot-bottom a { text-decoration: none; }
+
+@media (max-width: 640px) {
+  .lzd-foot-main { flex-direction: column; gap: 2rem; }
+  .lzd-foot-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .lzd-foot-bottom { flex-direction: column; }
 }
 
 /* ==========================================================================
@@ -530,6 +656,35 @@ button:active,
 }
 #lzd-home .lzd-section-head h2 { margin-bottom: 0.8rem; }
 #lzd-home .lzd-section-head p { color: var(--lzd-muted); font-size: 1.05rem; }
+
+/* --- Deal banner -----------------------------------------------------
+   One big promo image, chosen in the Customizer. Wears the same chunky
+   outline and hard shadow as everything else so it reads as part of the
+   store, not a pasted-in ad.
+   ---------------------------------------------------------------------- */
+
+#lzd-home .lzd-deal { padding: 2rem 0 2.6rem; }
+#lzd-home .lzd-deal-frame {
+  margin: 0;
+  border: var(--lzd-border-lg);
+  border-radius: var(--lzd-radius-lg);
+  box-shadow: var(--lzd-shadow-lg);
+  overflow: hidden;
+  background: var(--lzd-cream-2);
+  line-height: 0;
+}
+#lzd-home .lzd-deal-frame img { display: block; width: 100%; height: auto; margin: 0; }
+/* Hold the banner's shape while it loads (laptop 8:3, phone square),
+   so nothing below it jumps. Matches the 2400 x 900 and 1080 x 1080 sizes. */
+#lzd-home .lzd-deal-frame img { aspect-ratio: 8 / 3; object-fit: cover; }
+@media (max-width: 768px) {
+  #lzd-home .lzd-deal-frame img { aspect-ratio: 1 / 1; }
+}
+
+@media (max-width: 768px) {
+  #lzd-home .lzd-deal { padding: 1.2rem 0 1.8rem; }
+  #lzd-home .lzd-deal-frame { border-radius: var(--lzd-radius); border-width: 3px; box-shadow: var(--lzd-shadow); }
+}
 
 /* --- Split hero: THC | Mushrooms ----------------------------------------
    Two full-bleed panels, each jumping to its own lineup section further
@@ -654,6 +809,12 @@ button:active,
   gap: 1.5rem;
   text-align: center;
 }
+/* Storefront's .col-full adds invisible clearfix pieces before and after
+   its content. Inside a grid those take up a cell and push the items out
+   of line, so switch them off here. */
+#lzd-home .lzd-trust-inner::before,
+#lzd-home .lzd-trust-inner::after { content: none; display: none; }
+
 #lzd-home .lzd-trust-item b {
   display: block;
   font-family: var(--lzd-font-ui);
@@ -678,6 +839,39 @@ button:active,
 #lzd-home .lzd-family-head h2 { margin-bottom: 0.8rem; }
 #lzd-home .lzd-family-head p { color: var(--lzd-muted); font-size: 1.05rem; }
 
+/* Dose chips under a section heading, e.g. 25mg Micros / 100mg OG / 200mg Xtra Bold */
+#lzd-home .lzd-doses {
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+}
+#lzd-home .lzd-doses li {
+  margin: 0;
+  background: var(--lzd-surface);
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius-pill);
+  box-shadow: var(--lzd-shadow);
+  padding: 0.45rem 1.1rem;
+  font-family: var(--lzd-font-ui);
+  font-size: 1rem;
+  color: var(--lzd-ink);
+}
+#lzd-home .lzd-doses li b { color: var(--lzd-coral); font-weight: 400; margin-right: 0.25rem; }
+#lzd-home .lzd-doses li:nth-child(2) b { color: var(--lzd-rust); }
+#lzd-home .lzd-doses li:nth-child(3) b { color: var(--lzd-ink); }
+#lzd-home .lzd-family-head .lzd-doses-note {
+  margin: 0.8rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lzd-muted);
+}
+
 #lzd-home .lzd-group { margin-bottom: 3.2rem; }
 #lzd-home .lzd-group:last-child { margin-bottom: 0; }
 
@@ -701,7 +895,17 @@ button:active,
   opacity: 0.3;
 }
 
-#lzd-home .lzd-family-mush { background: var(--lzd-cream-2); }
+/* Same dashed rule, without a label, for groups whose heading already says it all. */
+#lzd-home .lzd-group-rule {
+  border-top: 3px dashed var(--lzd-ink);
+  opacity: 0.3;
+  margin-bottom: 1.6rem;
+}
+
+#lzd-home .lzd-family-mush,
+#lzd-home .lzd-family-alt { background: var(--lzd-cream-2); }
+#lzd-home .lzd-kicker-big,
+#lzd-home .lzd-family-mush .lzd-kicker { font-size: clamp(1.3rem, 3vw, 1.7rem); letter-spacing: 0.24em; margin-bottom: 0.4rem; }
 
 /* A group with only two or three products looks stranded in a wide grid.
    'narrow' caps the row and centres it so it reads as a deliberate feature
@@ -887,4 +1091,190 @@ button:active,
   #lzd-home .lzd-hero-cta .button { width: 100%; }
   #lzd-home .lzd-rail-item { width: 170px; }
   #lzd-home .lzd-group-title h3 { white-space: normal; }
+}
+
+/* ==========================================================================
+   Phone tidy-ups
+   ========================================================================== */
+
+/* Flower: one swipeable row on phones, so the third product never
+   sits alone on its own line. The next card peeks in from the edge. */
+@media (max-width: 768px) {
+  #lzd-home #flower ul.products {
+    display: flex !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 14px;
+    margin-right: -1.41575em;   /* run to the screen edge */
+    padding: 0 1.41575em 12px 0;
+    scrollbar-width: none;
+  }
+  #lzd-home #flower ul.products::-webkit-scrollbar { display: none; }
+  #lzd-home #flower ul.products li.product {
+    flex: 0 0 62%;
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Trust strip stays one row of three, just smaller. */
+  #lzd-home .lzd-trust-inner { grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+  #lzd-home .lzd-trust-item b { font-size: 1.15rem; }
+  #lzd-home .lzd-trust-item span { display: block; font-size: 0.72rem; line-height: 1.3; }
+
+  /* Promises: a 2 x 2 grid instead of one long column. */
+  #lzd-home .lzd-promises { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+  #lzd-home .lzd-promise { padding: 1rem 0.8rem; }
+  #lzd-home .lzd-promise-icon { font-size: 1.5rem; }
+  #lzd-home .lzd-promise h3 { font-size: 0.92rem; }
+  #lzd-home .lzd-promise p { font-size: 0.76rem; line-height: 1.5; }
+}
+
+/* ==========================================================================
+   Shop page, grouped by category (shop-grouped.php)
+   ========================================================================== */
+
+#lzd-home.lzd-shop .lzd-shop-head {
+  text-align: center;
+  padding: 2.5rem 0 1rem;
+}
+#lzd-home.lzd-shop .lzd-shop-head h1 { margin: 0 0 1.4rem; }
+#lzd-home .lzd-shop-jump {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+#lzd-home .lzd-shop-jump a {
+  font-family: var(--lzd-font-ui);
+  font-size: 0.95rem;
+  text-decoration: none;
+  color: var(--lzd-ink);
+  background: var(--lzd-white);
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius-pill);
+  box-shadow: 0 4px 0 var(--lzd-ink);
+  padding: 0.45rem 1.1rem;
+}
+#lzd-home .lzd-shop-jump a:hover { background: var(--lzd-mustard); color: var(--lzd-ink); }
+#lzd-home.lzd-shop .lzd-family:first-of-type { padding-top: 2.5rem; }
+/* Stacked rows under one label, e.g. Vapes then Flower. */
+#lzd-home .lzd-shop-row + .lzd-shop-row { margin-top: 1.6rem; }
+
+@media (max-width: 640px) {
+  #lzd-home .lzd-shop-jump a { font-size: 0.85rem; padding: 0.4rem 0.9rem; }
+}
+
+/* Pages: hide the featured image Storefront prints above the page title.
+   Old pages carry leftover featured images from the previous theme that
+   were never meant to be shown. Products and posts are not affected. */
+.page:not(.home) .site-main .entry-header .wp-post-image { display: none; }
+
+/* FAQ and COA dropdowns (Details blocks): match the chunky card style. */
+.site-main .wp-block-details {
+  background: var(--lzd-white);
+  border: var(--lzd-border);
+  border-radius: var(--lzd-radius);
+  box-shadow: 0 4px 0 var(--lzd-ink);
+  padding: 0.9rem 1.2rem;
+  margin: 0 0 1rem;
+}
+.site-main .wp-block-details summary {
+  font-family: var(--lzd-font-ui);
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+.site-main .wp-block-details[open] summary { margin-bottom: 0.6rem; }
+.site-main .wp-block-details p:last-child { margin-bottom: 0; }
+
+/* ==========================================================================
+   Phone header and bottom bar
+   ========================================================================== */
+
+/* WP Rocket's "lazy rendering" adds content-visibility: auto to the footer.
+   That traps Storefront's phone bar (account, search, cart), which lives
+   inside the footer, so it stops sticking to the bottom of the screen.
+   Keep the footer rendered normally so the bar stays put. */
+.site-footer,
+#colophon {
+  content-visibility: visible !important;
+  contain: none !important;
+}
+
+/* Phones: show Account as a round icon button beside the cart. */
+@media (max-width: 767px) {
+  .storefront-primary-navigation .lzd-account {
+    display: inline-flex;
+    float: left;
+    clear: left;
+    padding: 0.72rem 0.9rem;
+    margin: 0 0.6rem 0 0;
+  }
+  .storefront-primary-navigation .lzd-account span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* ==========================================================================
+   Sticky deal bar
+   The dark top bar (Free shipping on orders over $50...) stays pinned to the
+   top of the screen while people scroll.
+   ========================================================================== */
+
+/* Storefront hides sideways overflow with overflow-x: hidden, which quietly
+   stops position: sticky from working. "clip" does the same job without
+   that side effect. Browsers that don't know "clip" keep "hidden", and the
+   bar simply scrolls away as before. */
+body,
+.site {
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.lzd-announce {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 9990;
+}
+
+/* Logged-in admins: sit below the black WordPress admin bar. */
+.admin-bar .lzd-announce { top: 32px; }
+@media (max-width: 782px) {
+  .admin-bar .lzd-announce { top: 46px; }
+}
+@media (max-width: 600px) {
+  .admin-bar .lzd-announce { top: 0; }
+}
+
+/* Phones: a little tighter so it takes less of the screen. */
+@media (max-width: 640px) {
+  .lzd-announce { font-size: 0.78rem; padding: 0.5rem 0.8rem; }
+}
+
+/* ==========================================================================
+   Product card buttons on phones
+   Two cards side by side are narrow, so "Pick your flavor" used to wrap
+   inside a pill and squash it into a circle. On phones the cards get a
+   little more room and the button becomes a rounded rectangle, so a
+   two-line label still looks tidy.
+   ========================================================================== */
+@media (max-width: 640px) {
+  .woocommerce ul.products,
+  .woocommerce-page ul.products { gap: 1rem 0.8rem; }
+  .woocommerce ul.products li.product .button {
+    display: block;
+    margin: auto 0.5rem 0;
+    padding: 0.55rem 0.45rem;
+    font-size: 0.82rem;
+    line-height: 1.15;
+    text-align: center;
+    white-space: normal;
+    border-radius: 18px;
+  }
 }
